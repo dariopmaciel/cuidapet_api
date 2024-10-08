@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:cuidapet_api/application/config/application_config.dart';
 import 'package:cuidapet_api/application/logger/i_logger.dart';
-import 'package:dotenv/dotenv.dart';
+
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:injectable/injectable.dart';

@@ -5,7 +5,6 @@ import 'package:test/test.dart';
 class MockResultRow extends Mock implements ResultRow {
   @override
   List<Object?>? values;
-
   @override
   Map<String, dynamic> fields;
 
@@ -14,18 +13,18 @@ class MockResultRow extends Mock implements ResultRow {
   MockResultRow(this.fields, [this.blobFields]);
 
   @override
-  dynamic operator [](dynamic? index) {
-    if(index is int) {
+  dynamic operator [](dynamic index) {
+    if (index is int) {
       return values?[index];
     } else {
       var fieldName = index.toString();
-      if(fields.containsKey(fieldName)) {
-        final fieldValue = fields[fieldName];
-        if(blobFields != null && blobFields!.contains(fieldName)) {
+      if (fields.containsKey(fieldName)) {
+        var fieldValue = fields[fieldName];
+        if (blobFields != null && blobFields!.contains(fieldName)) {
           return Blob.fromString(fieldValue);
         }
         return fieldValue;
-      }else {
+      } else {
         fail('Field $fieldName not found in fixture');
       }
     }
