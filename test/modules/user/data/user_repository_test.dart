@@ -1,20 +1,13 @@
 import 'dart:convert';
-
-import 'package:cuidapet_api/application/database/database_connection.dart';
 import 'package:cuidapet_api/application/database/i_database_connection.dart';
 import 'package:cuidapet_api/application/exceptions/user_notfound_exception.dart';
 import 'package:cuidapet_api/application/logger/i_logger.dart';
 import 'package:cuidapet_api/entities/user.dart';
 import 'package:cuidapet_api/modules/user/data/user_repository.dart';
-import 'package:mocktail/mocktail.dart';
-import 'package:mysql1/mysql1.dart';
 import 'package:test/test.dart';
-
 import '../../../core/fixture/fixture_reader.dart';
 import '../../../core/log/mock_logger.dart';
 import '../../../core/mysql/mock_database_connection.dart';
-import '../../../core/mysql/mock_mysql_connection.dart';
-
 import '../../../core/mysql/mock_results.dart';
 
 void main() {
