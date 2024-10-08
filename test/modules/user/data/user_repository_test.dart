@@ -70,10 +70,12 @@ void main() {
       //Assert
       expect(user, isA<User>());
       expect(user, userExpected);
+      // await Future.delayed(Duration(seconds: 1));
+      (database as MockDatabaseConnection).verifyConncectionClose();
     });
   });
 
-  test('DEVE retornar EXCEPTION - Usuario Não encontrado', () async {
+  test('DEVE retornar EXCEPTION - Usuario Não encontrado - opção 1', () async {
     //Arrange
     final id = 1;
     final mockResults = MockResults();
@@ -83,5 +85,27 @@ void main() {
     var call = userRepository.findById;
     //Assert
     expect(() => call(id), throwsA(isA<UserNotfoundException>()));
+    await Future.delayed(Duration(seconds: 1));
+    (database as MockDatabaseConnection).verifyConncectionClose();
+  });
+  test('DEVE retornar EXCEPTION - Usuario Não encontrado - opção 2', () async { //muito ruim
+    //Arrange
+    final id = 1;
+    final mockResults = MockResults();
+    (database as MockDatabaseConnection).mockQuerry(mockResults, [id]);
+    final userRepository = UserRepository(connection: database, log: log);
+    //Act
+    try {
+      await userRepository.findById(id);
+    } catch (e) {
+      if (e is UserNotfoundException) {
+        // não fazer nada
+      } else {
+        fail('Exception errada, deveria retornar um usernotfound');
+      }
+    }
+    //Assert
+    // expect(() => call(id), throwsA(isA<UserNotfoundException>()));
+    (database as MockDatabaseConnection).verifyConncectionClose();
   });
 }
