@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cuidapet_api/application/database/database_connection.dart';
 import 'package:cuidapet_api/application/database/i_database_connection.dart';
+import 'package:cuidapet_api/application/exceptions/user_notfound_exception.dart';
 import 'package:cuidapet_api/application/logger/i_logger.dart';
 import 'package:cuidapet_api/entities/user.dart';
 import 'package:cuidapet_api/modules/user/data/user_repository.dart';
@@ -51,13 +52,14 @@ void main() {
       final userRepository = UserRepository(connection: database, log: log);
 
       (database as MockDatabaseConnection).mockQuerry(mockResults);
+
       final userMap = jsonDecode(userFixtureDB);
       final userExpected = User(
           id: userMap['id'] as int,
           email: userMap['email'],
           registerType: userMap['tipo_cadastro'],
           iosToken: userMap['ios_token'],
-          androidToken: userMap['android_token'] ,
+          androidToken: userMap['android_token'],
           refreshToken: userMap['refresh_token'],
           imageAvatar: userMap['img_avatar'],
           supplierId: userMap['fornecedor_id']);
@@ -76,5 +78,17 @@ void main() {
       expect(user, isA<User>());
       expect(user, userExpected);
     });
+  });
+
+  test('DEVE retornar EXCEPTION - Usuario Não encontrado', () async {
+    //Arrange
+    final id = 1;
+    final mockResults = MockResults();
+    (database as MockDatabaseConnection).mockQuerry(mockResults, [id]);
+    final userRepository = UserRepository(connection: database, log: log);
+    //Act
+    var call = userRepository.findById;
+    //Assert
+    expect(() => call(id), throwsA(isA<UserNotfoundException>()));
   });
 }

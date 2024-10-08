@@ -27,7 +27,7 @@ class MockResults extends Mock implements Results {
   }
 
 //construtor
-  MockResults(String? json, List<String>? blobFields) {
+  MockResults([String? json, List<String>? blobFields]) {
     if (json != null) {
       final data = jsonDecode(json);
       if (data is List) {
