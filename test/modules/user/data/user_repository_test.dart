@@ -254,4 +254,16 @@ void main() {
       (database as MockDatabaseConnection).verifyConncectionClose();
     });
   });
+
+group('Grupo - Teste loginByEmailSocialKey', () {
+  test('Deve efetuar login com email e socialkey com sucesso', () async {
+    //Arrange
+    
+    
+    //Act
+    
+    //Assert
+    
+  });
+});
 }

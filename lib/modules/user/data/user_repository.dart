@@ -116,11 +116,12 @@ class UserRepository implements IUserRepository {
       } else {
         final dataMysql = result.first;
 
-        if (dataMysql['social_id'] == null ||
-            dataMysql['social_id'] != socialKey) {
+        if (dataMysql['social_id'] == null || dataMysql['social_id'] != socialKey) {
           await conn.query('''
             update usuario 
-            set social_id = ?, tipo_cadastro = ? 
+            set 
+              social_id = ?, 
+              tipo_cadastro = ? 
             where id = ?
           ''', [
             socialKey,
