@@ -169,7 +169,7 @@ void main() {
 
       when(() => exception.message).thenReturn('usuario.email_UNIQUE');
 
-      (database as MockDatabaseConnection).mockQueryException(exception);
+      (database as MockDatabaseConnection).mockQueryException(mockException:exception);
       //Act
       var call = UserRepository(connection: database, log: log).createUser;
       //Assert
@@ -178,7 +178,7 @@ void main() {
   });
 
   group('Grupo Teste loginWithEmailAndPassword', () {
-    test('Deve efetuar login com email e password', () async {
+    test('Deve efetuar login com email e password - Caminho Feliz', () async {
       //Arrange
       final userFixtureDB = FixtureReader.getJsonData(
           'modules/user/data/fixture/find_by_id_sucess_fixture.json');
@@ -192,13 +192,66 @@ void main() {
 
       final email = 'dariodepaulamaciel@hotmail.com';
       final password = '123123';
-      (database as MockDatabaseConnection).mockQuerry(mockResults, [
-        email,
-        CriptyHelper.generateSha256Hash(password),
-      ]);
+      (database as MockDatabaseConnection).mockQuerry(
+          mockResults, [email, CriptyHelper.generateSha256Hash(password)]);
+      final userMap = jsonDecode(userFixtureDB);
+      final userExpected = User(
+        id: userMap['id'],
+        email: userMap['email'],
+        registerType: userMap['tipo_cadastro'],
+        iosToken: userMap['ios_token'],
+        androidToken: userMap['android_token'],
+        refreshToken: userMap['refresh_token'],
+        imageAvatar: userMap['img_avatar'],
+        supplierId: userMap['fornecedor_id'],
+      );
       //Act
-
+      final user = await UserRepository(connection: database, log: log)
+          .loginWithEmailPassword(email, password, false);
       //Assert
+      // expect(user, isNotNull);
+      expect(user, userExpected);
+      (database as MockDatabaseConnection).verifyConncectionClose();
+    });
+
+    test(
+        'Deve efetuar login com email e password - Retorne Exception UserNotfoundException',
+        () async {
+      //Arrange
+      final mockResults = MockResults();
+
+      final email = 'dariodepaulamaciel@hotmail.com';
+      final password = '123123';
+      (database as MockDatabaseConnection).mockQuerry(
+          mockResults, [email, CriptyHelper.generateSha256Hash(password)]);
+
+      //Act
+      final call = UserRepository(connection: database, log: log)
+          .loginWithEmailPassword(email, password, false);
+      //Assert
+      // expect(user, isNotNull);
+      expect(() => call, throwsA(isA<UserNotfoundException>()));
+      await Future.delayed(Duration(seconds: 1));
+      (database as MockDatabaseConnection).verifyConncectionClose();
+    });
+
+    test('Deve efetuar login com email e password - Retorne DataBase Exception', () async {
+      //Arrange
+      // final mockResults = MockResults();
+
+      final email = 'dariodepaulamaciel@hotmail.com';
+      final password = '123123';
+      // (database as MockDatabaseConnection).mockQuerry(mockResults, [email, CriptyHelper.generateSha256Hash(password)]);
+
+      (database as MockDatabaseConnection).mockQueryException(params: [email, CriptyHelper.generateSha256Hash(password)]);
+
+      //Act
+      final call = UserRepository(connection: database, log: log).loginWithEmailPassword(email, password, false);
+      //Assert
+      // expect(user, isNotNull);
+      expect(() => call, throwsA(isA<DatabaseException>()));
+      await Future.delayed(Duration(seconds: 1));
+      (database as MockDatabaseConnection).verifyConncectionClose();
     });
   });
 }
