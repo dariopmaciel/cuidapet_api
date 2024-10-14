@@ -322,17 +322,17 @@ void main() {
       final email = 'dariodepaulamaciel@hotmail.com';
       final socialKey = 'G123';
       final socialType = 'Google';
-      final params = [email];
+      final paramsSelect = [email];
       final paramsUpdate = <Object>[
         socialKey,
         socialType,
         userMap['id'],
       ];
-      (database as MockDatabaseConnection).mockQuerry(mockResults, params);
+      (database as MockDatabaseConnection)
+          .mockQuerry(mockResults, paramsSelect);
       (database as MockDatabaseConnection)
           .mockQuerry(mockResults, paramsUpdate);
 
-      
       final userExpected = User(
         id: userMap['id'],
         email: userMap['email'],
@@ -351,8 +351,36 @@ void main() {
 
       //Assert
       expect(user, userExpected);
-      (database as MockDatabaseConnection).verifyQuerryCalled(params: params);
-      (database as MockDatabaseConnection).verifyQuerryCalled(params:paramsUpdate);
+      (database as MockDatabaseConnection)
+          .verifyQuerryCalled(params: paramsSelect);
+      (database as MockDatabaseConnection)
+          .verifyQuerryCalled(params: paramsUpdate);
+      (database as MockDatabaseConnection).verifyConncectionClose();
+    });
+
+    //!
+    test(
+        'Deve efetuar login com email e socialkey and return throws UsernotFoundException',
+        () async {
+      //Arrange
+
+      final mockResults = MockResults();
+
+      final email = 'dariodepaulamaciel@hotmail.com';
+      final socialKey = 'G123';
+      final socialType = 'Google';
+      final paramsSelect = [email];
+
+      (database as MockDatabaseConnection).mockQuerry(mockResults, paramsSelect);
+
+      //Act
+
+      final call = await UserRepository(connection: database, log: log).loginByEmailSocialKey;
+
+      //Assert
+      expect(()=> call(email, socialKey, socialType), throwsA(isA<UserNotfoundException>()));
+      await Future.delayed(Duration(microseconds: 100));
+      (database as MockDatabaseConnection).verifyQuerryCalled(params: paramsSelect);
       (database as MockDatabaseConnection).verifyConncectionClose();
     });
   });
