@@ -375,7 +375,7 @@ void main() {
 
       //Act
 
-      final call = await UserRepository(connection: database, log: log).loginByEmailSocialKey;
+      final call = UserRepository(connection: database, log: log).loginByEmailSocialKey;
 
       //Assert
       expect(()=> call(email, socialKey, socialType), throwsA(isA<UserNotfoundException>()));
