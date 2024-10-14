@@ -8,7 +8,6 @@ import 'package:cuidapet_api/application/logger/i_logger.dart';
 import 'package:cuidapet_api/entities/user.dart';
 import 'package:cuidapet_api/modules/user/data/user_repository.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:mysql1/mysql1.dart';
 import 'package:test/test.dart';
 import '../../../core/fixture/fixture_reader.dart';
 import '../../../core/log/mock_logger.dart';
@@ -117,7 +116,7 @@ void main() {
     });
   });
 
-  group('Grupo - Teste de Criação de Usuário', () {
+  group('Grupo Teste de Criação de Usuário', () {
     test('DEVE criar usuario com sucesso', () async {
       //Arrange
       final userId = 1;
@@ -260,7 +259,7 @@ void main() {
     });
   });
 
-  group('Grupo - Teste loginByEmailSocialKey', () {
+  group('Grupo Teste loginByEmailSocialKey', () {
     test('Deve efetuar login com email e socialkey com sucesso', () async {
       //Arrange
       final userFixtureDB = FixtureReader.getJsonData(
