@@ -318,13 +318,21 @@ void main() {
         'refresh_token',
         'img_avatar',
       ]);
+      final userMap = jsonDecode(userFixtureDB);
       final email = 'dariodepaulamaciel@hotmail.com';
       final socialKey = 'G123';
       final socialType = 'Google';
       final params = [email];
+      final paramsUpdate = <Object>[
+        socialKey,
+        socialType,
+        userMap['id'],
+      ];
       (database as MockDatabaseConnection).mockQuerry(mockResults, params);
+      (database as MockDatabaseConnection)
+          .mockQuerry(mockResults, paramsUpdate);
 
-      final userMap = jsonDecode(userFixtureDB);
+      
       final userExpected = User(
         id: userMap['id'],
         email: userMap['email'],
@@ -344,11 +352,7 @@ void main() {
       //Assert
       expect(user, userExpected);
       (database as MockDatabaseConnection).verifyQuerryCalled(params: params);
-      (database as MockDatabaseConnection).verifyQuerryNeverCalled(params: [
-        socialKey,
-        // socialType,
-        userMap['id'],
-      ]);
+      (database as MockDatabaseConnection).verifyQuerryCalled(params:paramsUpdate);
       (database as MockDatabaseConnection).verifyConncectionClose();
     });
   });
