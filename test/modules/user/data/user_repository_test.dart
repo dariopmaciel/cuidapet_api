@@ -407,9 +407,11 @@ void main() {
           UserRepository(connection: database, log: log).loginByEmailSocialKey;
 
       //Assert
-      expect(() => call(email, socialKey, socialType),throwsA(isA<DatabaseException>()));
+      expect(() => call(email, socialKey, socialType),
+          throwsA(isA<DatabaseException>()));
       await Future.delayed(Duration(microseconds: 100));
-      (database as MockDatabaseConnection).verifyQuerryCalled(params: paramsSelect);
+      (database as MockDatabaseConnection)
+          .verifyQuerryCalled(params: paramsSelect);
       (database as MockDatabaseConnection).verifyConncectionClose();
     });
   });
