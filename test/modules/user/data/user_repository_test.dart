@@ -371,14 +371,43 @@ void main() {
       final socialType = 'Google';
       final paramsSelect = [email];
 
-      (database as MockDatabaseConnection).mockQuerry(mockResults, paramsSelect);
+      (database as MockDatabaseConnection)
+          .mockQuerry(mockResults, paramsSelect);
 
       //Act
 
-      final call = UserRepository(connection: database, log: log).loginByEmailSocialKey;
+      final call =
+          UserRepository(connection: database, log: log).loginByEmailSocialKey;
 
       //Assert
-      expect(()=> call(email, socialKey, socialType), throwsA(isA<UserNotfoundException>()));
+      expect(() => call(email, socialKey, socialType),
+          throwsA(isA<UserNotfoundException>()));
+      await Future.delayed(Duration(microseconds: 100));
+      (database as MockDatabaseConnection)
+          .verifyQuerryCalled(params: paramsSelect);
+      (database as MockDatabaseConnection).verifyConncectionClose();
+    });
+
+    test(
+        'Deve efetuar login com email e socialkey and return throws DatabaseException',
+        () async {
+      //Arrange
+
+      final email = 'dariodepaulamaciel@hotmail.com';
+      final socialKey = 'G123';
+      final socialType = 'Google';
+      final paramsSelect = [email];
+
+      (database as MockDatabaseConnection)
+          .mockQueryException(params: paramsSelect);
+
+      //Act
+
+      final call =
+          UserRepository(connection: database, log: log).loginByEmailSocialKey;
+
+      //Assert
+      expect(() => call(email, socialKey, socialType),throwsA(isA<DatabaseException>()));
       await Future.delayed(Duration(microseconds: 100));
       (database as MockDatabaseConnection).verifyQuerryCalled(params: paramsSelect);
       (database as MockDatabaseConnection).verifyConncectionClose();
