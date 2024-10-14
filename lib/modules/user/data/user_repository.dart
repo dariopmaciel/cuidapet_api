@@ -1,4 +1,3 @@
-
 import 'package:cuidapet_api/application/database/i_database_connection.dart';
 import 'package:cuidapet_api/application/exceptions/database_exception.dart';
 import 'package:cuidapet_api/application/exceptions/user_exists_exception.dart';
@@ -24,7 +23,7 @@ class UserRepository implements IUserRepository {
     MySqlConnection? conn;
     try {
       conn = await connection.openConnection();
-      final query = ''' 
+      final query = '''
         insert usuario(email, tipo_cadastro, img_avatar, senha, fornecedor_id, social_id)
         values(?,?,?,?,?,?)
       ''';
@@ -108,15 +107,15 @@ class UserRepository implements IUserRepository {
     try {
       conn = await connection.openConnection();
 
-      final result =
-          await conn.query('select * from usuario where email = ?', [email]);
+      final result = await conn.query('select * from usuario where email = ?', [email]);
 
       if (result.isEmpty) {
         throw UserNotfoundException(message: 'Usuário não encontrado');
       } else {
         final dataMysql = result.first;
 
-        if (dataMysql['social_id'] == null || dataMysql['social_id'] != socialKey) {
+        if (dataMysql['social_id'] == null ||
+            dataMysql['social_id'] != socialKey) {
           await conn.query('''
             update usuario 
             set 
@@ -162,7 +161,7 @@ class UserRepository implements IUserRepository {
         setParams.putIfAbsent('android_token', () => user.androidToken);
       }
 
-      final query = ''' 
+      final query = '''
         update usuario
         set 
           ${setParams.keys.elementAt(0)} = ?,
@@ -194,7 +193,7 @@ class UserRepository implements IUserRepository {
       await conn?.close();
     }
   }
-  
+
   @override
   Future<User> findById(int id) async {
     MySqlConnection? conn;
@@ -255,16 +254,15 @@ class UserRepository implements IUserRepository {
     try {
       conn = await connection.openConnection();
       var set = '';
-      if(platform == Platform.ios) {
+      if (platform == Platform.ios) {
         set = 'ios_token = ?';
-      }else {
+      } else {
         set = 'android_token = ?';
       }
 
       final query = 'update usuario set $set where id = ?';
       await conn.query(query, [token, id]);
-
-    } on MySqlException catch(e,s) {
+    } on MySqlException catch (e, s) {
       log.error('Erro ao atualizar o device token', e, s);
       throw DatabaseException();
     } finally {

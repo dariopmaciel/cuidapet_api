@@ -6,5 +6,7 @@
     "android_token": "teste",
     "refresh_token": "teste",
     "img_avatar": "teste",
-    "fornecedor_id": 1
+    "fornecedor_id": 1,
+    
+    "social_id": "123"
 }
