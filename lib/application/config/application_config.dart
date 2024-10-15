@@ -12,7 +12,8 @@ class ApplicationConfig {
   late final DotEnv _env;
 
   Future<void> loadConfigApplication(Router router) async {
-    _env = await _loadEnv();
+    // _env = await _loadEnv();
+    await _loadEnv();
     
     _loadDatabaseConfig();
     _configLogger();

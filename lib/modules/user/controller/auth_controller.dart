@@ -107,7 +107,8 @@ class AuthController {
         'refresh_token': refreshToken,
       }));
     } on RequestValidationException catch (e, s) {
-      log.error('ERRO, PARAMETROS PBRIGATÓRIOS NÃO ENVIADOS (BadRequest)', e, s);
+      log.error(
+          'ERRO, PARAMETROS PBRIGATÓRIOS NÃO ENVIADOS (BadRequest)', e, s);
       return Response(400, body: jsonEncode(e.errors));
     } catch (e, s) {
       log.error('Erro ao confirmar login', e, s);
