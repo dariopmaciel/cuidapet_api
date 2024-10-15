@@ -31,7 +31,9 @@ class JwtHelper {
   }
 
   static String refreshToken(String accessToken) {
+
     final env = GetIt.I.get<ApplicationConfig>().env;
+    
     final expiry = int.parse(env['REFRESH_TOKEN_EXPIRE_DAYS'] ?? env['refresh_token_expire_days']!);
     final notBefore = int.parse(env['REFRESH_TOKEN_NOT_BEFORE_HOURS'] ?? env['refresh_token_not_before_hours']!);
 

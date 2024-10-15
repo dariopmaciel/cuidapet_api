@@ -18,6 +18,9 @@ class ApplicationConfig {
     _configLogger();
     _loadDependencies();
     _loadRoutersConfigure(router);
+      
+      GetIt.I.registerSingleton<ApplicationConfig>(this);
+      // GetIt.I.registerSingleton<ApplicationConfig>(ApplicationConfig());
   }
 
   Future<DotEnv> _loadEnv() async => DotEnv(includePlatformEnvironment: true)..load();
